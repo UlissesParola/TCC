@@ -26,6 +26,6 @@ public class LocalPlayerController : MonoBehaviour
 	{
 		_playerRB.velocity = new Vector3(CrossPlatformInputManager.GetAxis("Horizontal"),CrossPlatformInputManager.GetAxis("Vertical"), 0 ) * MovimentSpeed;
 		Debug.Log(CrossPlatformInputManager.GetAxis("Vertical"));
-		bool isBoost = CrossPlatformInputManager.GetButton("Boost");
+		//bool isBoost = CrossPlatformInputManager.GetButton("Boost");
 	}
 }

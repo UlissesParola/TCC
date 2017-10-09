@@ -1,19 +1,21 @@
 ﻿
+using System.Collections.Generic;
 using UnityEngine;
 using GooglePlayGames;
 using GooglePlayGames.BasicApi;
 using GooglePlayGames.BasicApi.Multiplayer;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 
 public class PlayGamesManager : MonoBehaviour, RealTimeMultiplayerListener
 {
-	public Text DebugLogtext;
+	public MenuControl MainMenu;
+	
 	private string _log;
 	private static PlayGamesManager _instance;
 	const int MinOpponents = 1, MaxOpponents = 1;
 	const int GameVariant = 0;
-	private bool _showingWaitingRoom = false;
 
 	// Use this for initialization
 	void Awake() {
@@ -91,25 +93,37 @@ public class PlayGamesManager : MonoBehaviour, RealTimeMultiplayerListener
 	private void ShowMPStatus(string message)
 	{
 		_log += message + "\n";
+		MainMenu.ShowDebugLog(_log);
 		Debug.Log(message);
-		DebugLogtext =  GameObject.Find("Debug").GetComponentInChildren<Text>();
-		DebugLogtext.text = _log;
-		
 	}
+
+	public List<Participant> GetAllPlayers()
+	{
+		return PlayGamesPlatform.Instance.RealTime.GetConnectedParticipants();
+	}
+
+	public string GetMyParticipantId()
+	{
+		return PlayGamesPlatform.Instance.RealTime.GetSelf().ParticipantId;
+	}
+	
+	
+	
+	#region RealTimeMultiplayerListener implementation
 
 	public void OnRoomSetupProgress(float progress) {
 		// show the default waiting room.
-		if (!_showingWaitingRoom) {
-			_showingWaitingRoom = true;
-			PlayGamesPlatform.Instance.RealTime.ShowWaitingRoomUI();
-			ShowMPStatus("In wating room");
-		}
+		MainMenu.ShowWaitingRoomUI();
+		ShowMPStatus("Finding a match."); 
 	}
 
 	public void OnRoomConnected(bool success)
 	{
-		if (success) {
-			ShowMPStatus ("We are connected to the room! I would probably start our game now.");
+		if (success)
+		{
+			MainMenu.HideWaitingRoomUI();
+			SceneManager.LoadScene("Online");
+			
 		} else {
 			ShowMPStatus ("Uh-oh. Encountered some error connecting to the room.");
 		}
@@ -145,4 +159,7 @@ public class PlayGamesManager : MonoBehaviour, RealTimeMultiplayerListener
 	{
 		ShowMPStatus ("We have received some gameplay messages from participant ID:" + senderId);
 	}
+
+	#endregion
+
 }
