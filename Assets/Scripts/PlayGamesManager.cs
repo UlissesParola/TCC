@@ -12,10 +12,15 @@ public class PlayGamesManager : MonoBehaviour, RealTimeMultiplayerListener
 {
 	public MenuControl MainMenu;
 	
-	private string _log;
-	private static PlayGamesManager _instance;
 	const int MinOpponents = 1, MaxOpponents = 1;
 	const int GameVariant = 0;
+	
+	private string _log;
+	private static PlayGamesManager _instance;
+	private int _updateMessageLength = 17;
+	private List<byte> _updateMessage;
+	private byte[] _messageToSend;
+	private IMPUpdateListener _gameManager;
 
 	// Use this for initialization
 	void Awake() {
@@ -33,6 +38,9 @@ public class PlayGamesManager : MonoBehaviour, RealTimeMultiplayerListener
 	private void Start()
 	{
 		Authenticate();
+
+		_updateMessage = new List<byte>(_updateMessageLength);
+		_messageToSend = new byte[_updateMessageLength];
 	}
 
 	public void Authenticate()
@@ -63,7 +71,8 @@ public class PlayGamesManager : MonoBehaviour, RealTimeMultiplayerListener
 		if (! PlayGamesPlatform.Instance.localUser.authenticated) {
 			PlayGamesPlatform.Instance.localUser.Authenticate((bool success) => {
 				if (success) {
-					ShowMPStatus("We're signed in! Welcome " + PlayGamesPlatform.Instance.localUser.userName);
+					ShowMPStatus("We're signed in! Welcome " + 
+					             PlayGamesPlatform.Instance.localUser.userName);
 				} else {
 					ShowMPStatus("Oh... we're not signed in.");
 				}
@@ -114,7 +123,7 @@ public class PlayGamesManager : MonoBehaviour, RealTimeMultiplayerListener
 	public void OnRoomSetupProgress(float progress) {
 		// show the default waiting room.
 		MainMenu.ShowWaitingRoomUI();
-		ShowMPStatus("Finding a match."); 
+		ShowMPStatus("Buscando outros jogadores."); 
 	}
 
 	public void OnRoomConnected(bool success)
@@ -125,7 +134,7 @@ public class PlayGamesManager : MonoBehaviour, RealTimeMultiplayerListener
 			SceneManager.LoadScene("Online");
 			
 		} else {
-			ShowMPStatus ("Uh-oh. Encountered some error connecting to the room.");
+			ShowMPStatus ("Não foi possivel se conectar.");
 		}
 	}
 
@@ -157,9 +166,42 @@ public class PlayGamesManager : MonoBehaviour, RealTimeMultiplayerListener
 
 	public void OnRealTimeMessageReceived(bool isReliable, string senderId, byte[] data)
 	{
-		ShowMPStatus ("We have received some gameplay messages from participant ID:" + senderId);
+		string sender = senderId;
+		
+		char messageType = (char)data[0];
+		if (messageType == 'U' && data.Length == _updateMessageLength)
+		{
+			float posX = System.BitConverter.ToSingle(data, 1);
+			float posY = System.BitConverter.ToSingle(data, 5);
+			float velX = System.BitConverter.ToSingle(data, 9);
+			float velY = System.BitConverter.ToSingle(data, 13);
+			
+			if (_gameManager == null)
+			{
+				_gameManager = FindObjectOfType<GameManager>();
+			}
+			else
+			{
+				_gameManager.UpdateReceived(senderId, posX, posY, velX, velY);	
+			}
+		}	
 	}
 
 	#endregion
 
+	
+	public void SendMyUpdate(float posX, float posY, Vector2 velocity)
+	{
+		_updateMessage.Clear ();
+		_updateMessage.Add((byte) 'U');
+		_updateMessage.AddRange(System.BitConverter.GetBytes(posX));
+		_updateMessage.AddRange(System.BitConverter.GetBytes(posY));
+		_updateMessage.AddRange(System.BitConverter.GetBytes(velocity.x));
+		_updateMessage.AddRange(System.BitConverter.GetBytes(velocity.y));
+		_messageToSend = _updateMessage.ToArray();
+		PlayGamesPlatform.Instance.RealTime.SendMessageToAll(false, _messageToSend);
+	}
+
+	
 }
+

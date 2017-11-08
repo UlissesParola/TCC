@@ -20,6 +20,7 @@ public class LocalPlayerController : MonoBehaviour
 	{
 		//Vector3 moviment = new Vector3(CrossPlatformInputManager.GetAxis("Horizontal"),CrossPlatformInputManager.GetAxis("Vertical"), 0 ) * Time.deltaTime * MovimentSpeed;
 		//transform.position += moviment;
+		
 	}
 
 	private void FixedUpdate()
@@ -28,4 +29,5 @@ public class LocalPlayerController : MonoBehaviour
 		Debug.Log(CrossPlatformInputManager.GetAxis("Vertical"));
 		//bool isBoost = CrossPlatformInputManager.GetButton("Boost");
 	}
+	
 }
