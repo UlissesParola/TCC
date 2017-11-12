@@ -7,6 +7,7 @@ public class GameManager : MonoBehaviour, IMPUpdateListener
 {
 	public GameObject OtherPlayerPrefab;
 	public GameObject PlayerPrefab;
+	public Sprite[] PlayerSprite; 
 	public GameObject[] SpawningPoints;
 
 	private GameObject _localPlayer;
@@ -42,11 +43,13 @@ public class GameManager : MonoBehaviour, IMPUpdateListener
 			if (nextParticipantId == _myParticipantId)
 			{
 				_localPlayer =  Instantiate(PlayerPrefab, spawningPoint, Quaternion.identity);
+				_localPlayer.GetComponent<SpriteRenderer>().sprite = PlayerSprite[i];
 				Camera.main.GetComponent<MainCameraController>().SetLocalPlayer(_localPlayer);
 			}
 			else
 			{
 				_otherPlayer =  Instantiate(OtherPlayerPrefab, spawningPoint, Quaternion.identity);
+				_otherPlayer.GetComponent<SpriteRenderer>().sprite = PlayerSprite[i];
 				_otherParticipantId = nextParticipantId;
 			}
 		}

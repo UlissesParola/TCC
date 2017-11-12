@@ -174,7 +174,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0, b: 0, a: 0.6431373}
+  m_Color: {r: 0.50980395, g: 0.72156864, b: 0.854902, a: 0.6431373}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -363,7 +363,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0, b: 0, a: 0.6431373}
+  m_Color: {r: 0.50980395, g: 0.7254902, b: 0.8470589, a: 0.6431373}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -526,7 +526,7 @@ Prefab:
     - target: {fileID: 224395342002006958, guid: 6ae827cf70ae34141b082699965e2da0,
         type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -21
       objectReference: {fileID: 0}
     - target: {fileID: 224395342002006958, guid: 6ae827cf70ae34141b082699965e2da0,
         type: 2}
@@ -536,12 +536,12 @@ Prefab:
     - target: {fileID: 224395342002006958, guid: 6ae827cf70ae34141b082699965e2da0,
         type: 2}
       propertyPath: m_SizeDelta.y
-      value: 0
+      value: 22
       objectReference: {fileID: 0}
     - target: {fileID: 224942407184437298, guid: 6ae827cf70ae34141b082699965e2da0,
         type: 2}
       propertyPath: m_SizeDelta.y
-      value: 0
+      value: 42
       objectReference: {fileID: 0}
     - target: {fileID: 224942407184437298, guid: 6ae827cf70ae34141b082699965e2da0,
         type: 2}
@@ -752,7 +752,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0, b: 0, a: 0.6431373}
+  m_Color: {r: 0.50980395, g: 0.72156864, b: 0.854902, a: 0.6431373}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:

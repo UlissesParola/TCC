@@ -45,3 +45,9 @@ TagManager:
   - name: Player
     uniqueID: 1764658155
     locked: 0
+  - name: Forest
+    uniqueID: 3252113795
+    locked: 0
+  - name: Snow
+    uniqueID: 4190850475
+    locked: 0
